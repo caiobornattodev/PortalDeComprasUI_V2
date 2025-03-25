@@ -1,0 +1,29 @@
+<div style="margin-right : 10px;" id="sidebar" class="sidebar ">
+    <div [style]="sidebarColapsed ? 'width : 40px' : 'width : 250px' ">
+        @if(sidebarColapsed){
+        <div (click)="toggleColapse()">
+            <i style="margin-left : 30%; cursor : pointer" class="mt-3 col fa fa-bars"></i>
+        </div>
+        } @else {
+        <div>
+            <nav class="nav flex-column">
+                <div style="white-space : nowrap" class="row p-2">
+                    <a routerLink="" style="color: white; cursor: pointer;" class="col navbar-brand px-3 mb-3" asp-area="" asp-controller="Home"
+                        asp-action="Index">
+                        Portal de Compras
+                    </a>
+                    <i (click)="toggleColapse()" style="cursor : pointer" class="mt-2 ms-4  col fa fa-bars"></i>
+                </div>
+                @for (menuItem of menuItems; track $index) {
+                <a routerLink="{{menuItem.navLink}}" class="nav-link" role="button">
+                    <span>
+                        <i [class]="menuItem.icon"></i>
+                        {{ menuItem.label }}
+                    </span>
+                </a>
+                }
+            </nav>
+        </div>
+        }
+    </div>
+</div>

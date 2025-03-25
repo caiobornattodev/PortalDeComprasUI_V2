@@ -1,0 +1,40 @@
+
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #244242; /* Sidebar escura */
+    color: #ffffff; /* Texto branco */
+    padding-top: 20px;
+    z-index: 10;
+}
+
+    .sidebar .nav-link {
+        color: #ffffff;
+        margin: 5px 0;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .sidebar .nav-link:hover {
+            background-color: #23272b; /* tom mais escuro no hover */
+            border-radius: 5px;
+        }
+
+.content {
+    margin-left: 50px;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.submenu .nav-link {
+    padding-left: 40px; /* Indentação para submenus */
+}
+
+/* Ajuste do conteúdo quando sidebar estiver oculta */
+.content.full-width {
+    margin-left: 0;
+}

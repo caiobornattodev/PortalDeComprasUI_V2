@@ -1,0 +1,120 @@
+<!-- <h2 class="text-center my-4">Registrar Novo Usuário</h2> -->
+<div class="register-user-container">
+    <div class="register-user-card">
+        <form [formGroup]="registerForm" (ngSubmit)="register()" class="form-horizontal">
+
+            <!-- Campo de E-mail -->
+            <div class="form-group mb-3">
+                <label class="form-label">Email</label>
+                <input class="form-control" formControlName="email" type="email" />
+                <span
+                    *ngIf="registerForm.controls['email'].hasError('required') && registerForm.controls['email'].touched"
+                    class="text-danger">Email é obrigatório</span>
+            </div>
+
+            <!-- Campos de Senha e Confirmação de Senha -->
+            <div class="form-group mb-3 position-relative">
+                <label class="form-label">Senha</label>
+                <div class="position-relative">
+                    <input class="form-control pe-5" formControlName="password"
+                        [type]="!showPassword ? 'password' : 'text'" />
+                    <span (click)="toggleShowPassord('password')" class="position-absolute end-0 top-0 mt-2 me-2"
+                        style="cursor: pointer;">
+                        <i [class]="showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                    </span>
+                </div>
+                <span
+                    *ngIf="registerForm.controls['password'].hasError('required')  && registerForm.controls['password'].touched"
+                    class="text-danger">Senha é obrigatória</span>
+            </div>
+
+            <div class="form-group mb-3 position-relative">
+                <label class="form-label">Confirmar Senha</label>
+                <div class="position-relative">
+                    <input class="form-control pe-5" formControlName="confirmPassword"
+                        [type]="!showConfirmPassword ? 'password' : 'text'" />
+                    <span (click)="toggleShowPassord('confirmPassword')" class="position-absolute end-0 top-0 mt-2 me-2"
+                        style="cursor: pointer;">
+                        <i [class]="showConfirmPassword ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                    </span>
+                </div>
+                <span
+                    *ngIf="registerForm.controls['confirmPassword'].hasError('required') && registerForm.controls['confirmPassword'].touched"
+                    class="text-danger">Confirmar senha é obrigatório</span>
+                <span
+                    *ngIf="registerForm.controls['confirmPassword'].hasError('isMatch')"
+                    class="text-danger">As senhas não batem</span>
+            </div>
+
+            <!-- Grupo de Radio para UserType -->
+            <div class="form-group mb-3">
+                <label class="form-label">Tipo:</label>
+                <div class="d-flex justify-content-start flex-wrap">
+                    @for (typeOption of typeOptions; track $index) {
+                    <label class="form-check-label me-3">
+                        <input type="radio" class="form-check-input" formControlName="userType"
+                            [value]="typeOption.value" [name]="'userType'" [checked]="typeOption.value === 0" />
+                        {{ typeOption.key }}
+                    </label>
+                    }
+                </div>
+            </div>
+
+            <!-- Não exibir usuario e senha sap caso o tipo seja comprador -->
+            @if(!isComprador()){
+            <!-- Campo SapUser -->
+            <div class="form-group mb-3">
+                <label class="form-label">Usuário SAP</label>
+                <input class="form-control" formControlName="sapUser" />
+                <span
+                    *ngIf="registerForm.controls['sapUser'].hasError('required') && registerForm.controls['sapUser'].touched"
+                    class="text-danger">Usuário SAP é obrigatório</span>
+            </div>
+
+            <!-- Campo SapPassword -->
+            <div class="form-group mb-3 position-relative">
+                <label class="form-label">Senha SAP</label>
+                <div class="position-relative">
+                    <input formControlName="sapPassword" class="form-control pe-5"
+                        [type]="!showSapPasword ? 'password' : 'text'" />
+                    <span (click)="toggleShowPassord('sapPassword')" class="position-absolute end-0 top-0 mt-2 me-2"
+                        style="cursor: pointer;">
+                        <i [class]="showSapPasword ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                    </span>
+                </div>
+                <span
+                    *ngIf="registerForm.controls['sapPassword'].hasError('required') && registerForm.controls['sapPassword'].touched"
+                    class="text-danger">Senha SAP é obrigatória</span>
+            </div>
+            }
+
+            <div class="form-group mb-3 position-relative">
+                <label class="control-label">Colaborador</label>
+                <input formControlName="employeeId" type="hidden" />
+                <div class="position-relative">
+                    <input class="form-control pe-5" type="text" formControlName="employeeName" />
+                    <span (click)="openRequesterModal()" class="position-absolute end-0 top-0 mt-2 me-2"
+                        title="Buscar Colaborador" style="cursor: pointer;">
+                        <i class="fa fa-search"></i>
+                    </span>
+                </div>
+                <span *ngIf="registerForm.controls['employeeId'].hasError('required')" class="text-danger">Colaborador é
+                    obrigatório</span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">Empresa</label>
+                <select formControlName="companyId" class="form-control">
+                    @for (company of companies; track $index) {
+                    <option [value]="company.companyId">{{ company.companyName }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="btn-wrapper">
+                <input [disabled]="!registerForm.valid" type="submit" value="Salvar" class="btn btn-success" />
+                <a routerLink="/login" class="btn btn-info">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>

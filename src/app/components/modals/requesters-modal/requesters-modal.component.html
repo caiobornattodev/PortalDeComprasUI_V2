@@ -1,0 +1,50 @@
+<div class="p-4" >
+    <div class="content-modal">
+        <div class="mb-3 form-group">
+            <label class="control-label">Procurar:</label>
+            <input v-model="search" class="form-control" />
+        </div>
+        @if(requesters.length > 0){
+            <div class="scroll-table-modal p-2">
+                <table class="table-requester table table-striped table-bordered table-sm-custom table-responsive table-hover">
+                    <thead>
+                        <tr>
+                            <th width="15%">Cod. Colaborador</th>
+                            <th>Nome</th>
+                            <th>Sobrenome</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (requester of requesters; track $index) {
+                            <tr (dblclick)="onSelectRequester(requester)" style="cursor : pointer" title="*Clique duas vezes para selecionar o Colaborador">
+                                <td >{{ requester.empId }}</td>
+                                <td>{{ requester.firstName }}</td>
+                                <td>{{ requester.lastName }}</td>
+                            </tr>
+                        }                   
+                    </tbody>
+                </table>
+            </div>
+        } @else {
+            <div class="p-4 border rounded shadow-sm">
+                <div style="font-size: 25px; text-align: center;">
+                    <strong>Nenhum resultado encontrado.</strong>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="modal-footer">
+        <div (click)="bsModalRef.hide()" class="btn btn-danger">Cancelar</div>
+    </div>
+</div>
+
+<!-- v-on:dblclick="selectRequester(colaborador.empId,colaborador.firstName)" -->
+
+<!-- <div id="modalRequesterColaborador" style="display : none" class="p-5">
+    <div class="modal-container p-4 border rounded shadow-sm">
+
+        <div class="modal-foot">
+            <div v-on:click="closeModalRequesterUser()" style="margin-left : 100px;" class="btn btn-danger">Cancelar</div>
+        </div>
+    </div>
+</div> -->
