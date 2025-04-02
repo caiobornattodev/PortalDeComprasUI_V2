@@ -22,7 +22,7 @@ export class LoginComponent {
   login() {
     this.accountService.login(this.userLogin).subscribe({
       next: _ => {
-        this.router.navigateByUrl('/purchaseRequests');
+        this.router.navigateByUrl('/documents/purchaseRequests');
       },
       error: error => this.toastr.error(error.error)
     });

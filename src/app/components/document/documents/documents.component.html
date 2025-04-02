@@ -1,0 +1,131 @@
+<div class="p-1 border rounded shadow-sm p-3">
+    <!--Form Filtros-->
+    <form [formGroup]="filterForm" (ngSubmit)="getDocuments(documentType)" class="mb-2">
+        <!-- <input type="hidden" name="isFilter" value="False" /> -->
+        <div class="row align-items-end">
+
+            <!-- Caixa de busca global -->
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Pesquisar</label>
+                    <input type="text" formControlName="globalFilter" class="form-control"
+                        placeholder="Buscar por Documento, Comentários ou Total" (keyup)="searchBar($event)">
+                </div>
+            </div>
+            <!-- Checkboxes de Status -->
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Status</label>
+                    <div>
+                        @for(status of boStatus; track $index){
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" for="statusN">{{ status.label }}</label>
+                            <input type="checkbox" class="form-check-input" [value]="status.value"
+                                (change)="onStatusChange($event)"
+                                [checked]="filterForm.value.statuses.includes(status.value)" />
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Início -->
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Data Início</label>
+                    <input bsDatepicker formControlName="searchStartDate" class="form-control cursor-pointer"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }" />
+                </div>
+            </div>
+
+            <!-- Data Fim -->
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Data Fim</label>
+                    <input bsDatepicker class="form-control cursor-pointer" formControlName="searchEndDate"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }" />
+                </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="col-md-1 text-end clear-fix">
+                <div class="d-flex justify-content-end" style="gap: 0.5rem;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-arrow-rotate-right"></i>
+                    </button>
+
+                    <button (click)="initializeForm()" type="button" class="btn btn-secondary">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-success">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--Grid Pedidos de Compra-->
+<div class="full-width mt-3">
+    @if(documents.length > 0){
+    <table class="table  table-bordered table-sm-custom">
+        <thead>
+            <tr>
+                <th class="text-center" width="1%">Nº</th>
+                <th class="text-center" width="0.1%">Status</th>
+                <th width="40%">Comentários</th>
+                <th width="1%">Data</th>
+                <th width="5%" class="text-end">Total</th>
+                <th width="1%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of documentsFiltered; track $index) {
+            <tr [class]="helperService.getRowStatusClass(item.docStatus)">
+                <td>{{ item.docNum }}</td>
+                <td class="text-center">
+                    <ng-container [ngSwitch]="item.docStatus">
+                        <span *ngSwitchCase="'O'" title="Aberto">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                        </span>
+                        <span *ngSwitchCase="'C'" title="Fechado">
+                            <i class="bi bi-x-circle-fill text-secondary"></i>
+                        </span>
+                        <span *ngSwitchCase="'W'" title="Aguardando Aprovação">
+                            <i class="bi bi-clock-fill text-warning"></i>
+                        </span>
+                        <span *ngSwitchCase="'N'" title="Não Aprovado">
+                            <i class="bi bi-exclamation-circle-fill text-danger"></i>
+                        </span>
+                        <span *ngSwitchDefault title="Status Desconhecido">
+                            <i class="bi bi-question-circle-fill text-muted"></i>
+                        </span>
+                    </ng-container>
+                </td>
+                <td>{{ item.comments !== '' ? item.comments : '-' }}</td>
+                <td>{{ item.docDate | date : 'dd/MM/yyyy'}}</td>
+                <td style="text-align: right;">{{ item.docTotal | currency : 'BRL' }}</td>
+                <td style="text-align: center;">
+                    <div dropdown class="dropdown">
+                        <div dropdownToggle class="cursor-pointer" title="Ações">
+                            <i class="fa fa-bars"></i>
+                        </div>
+                        <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                            <a routerLink="/document/details/{{ documentType }}/{{ item.docEntry }}" class="dropdown-item cursor-pointer">Detalhes</a>
+                            <div class="dropdown-divider"></div>
+                            @if( documentType === 'purchaseRequests'){
+                                <a class="dropdown-item cursor-pointer">Consultar pedido</a>
+                                <div class="dropdown-divider"></div>
+                            }
+                            <a class="dropdown-item cursor-pointer">Editar</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    }
+</div>

@@ -1,4 +1,4 @@
-<div style="margin-right : 10px;" id="sidebar" class="sidebar ">
+<div style="margin-right : 10px;" id="sidebar" class="sidebar" [ngClass]="sidebarColapsed ? 'collapsed' : 'expanded'">
     <div [style]="sidebarColapsed ? 'width : 40px' : 'width : 250px' ">
         @if(sidebarColapsed){
         <div (click)="toggleColapse()">

@@ -4,15 +4,15 @@ import { DocumentAdditionalExpense } from "./documentAditionalExpense"
 import { DocumentLine } from "./documentLine"
 import { UserCredential } from "./userCredential"
 
-export interface Document {
+export interface SapDocument {
     isDraft: string
     docStatus: string
     docEntry: number
     docNum: string
     objType: number
     docType: string
-    docDate: Date
-    docDueDate: Date
+    docDate: Date | undefined
+    docDueDate: Date | undefined
     taxDate: Date
     reqDate: Date
     cardCode: string | null

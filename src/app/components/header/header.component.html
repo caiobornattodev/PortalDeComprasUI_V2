@@ -2,12 +2,12 @@
     <nav class="navbar navbar-dark  border-bottom box-shadow" style="background-color:#244242">
         <div class="container-fluid">
             <img class="mt-3" style=" max-height: 50px;" src="https://www.oralunic.com.br/_next/static/images/logo-ceda5685ae2f919b249637629e19ffea.png " />
-            <span class="navbar-brand mb-0 h1 text-white"></span>
+            <span class="navbar-brand mb-0 h1 text-white">{{ helperService.headertTitle }}</span>
             <ul class="navbar-nav ml-auto">
                 @if (accountService.currentUser())
                 {
                     <div class="me-2">
-                        <a style="color: white; cursor: pointer;" (click)="logOut()">Logout <i class="ms-1 fa-solid fa-right-from-bracket"></i> </a>
+                        <a style="color: white; cursor: pointer;" (click)="logOut()">{{accountService.currentUser()?.name}} - Logout <i class="ms-1 fa-solid fa-right-from-bracket"></i> </a>
                     </div>
                 }
             </ul>
