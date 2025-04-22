@@ -1,1 +1,228 @@
-<p>create-purchase-request works!</p>
+<div class="p-4 border rounded shadow-sm mb-5 container">
+    <form [formGroup]="form" (ngSubmit)="createPurchaseRequest()">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group mb-3 position-relative">
+                    <label class="control-label">Solicitante</label>
+                    <!-- <input type="hidden" asp-for="Requester" />
+                    <input type="hidden" asp-for="Email" /> -->
+                    <div class="position-relative">
+                        <input readonly formControlName="reqName" class="form-control pe-5" type="text" />
+                        <span (click)="openRequesterModal()" class="position-absolute end-0 top-0 mt-2 me-2"
+                            title="Buscar Solicitante" style="cursor: pointer;">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3 position-relative">
+                    <label class="form-label">Filial</label>
+                    <select formControlName="branch" class="form-select">
+                        @for (businessPlace of businessPlaces; track $index) {
+                        <option [value]="businessPlace.bplId">{{ businessPlace.bplName }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group mb-3 position-relative">
+                    <label class="form-label">Departamento</label>
+                    <select formControlName="department" class="form-select">
+                        @for (department of departments; track $index) {
+                        <option [value]="department.code">{{ department.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group mb-3 position-relative">
+                    <label class="form-label">Tipo de Documento</label>
+                    <select (change)="wipeDocumentLines()" formControlName="docType" class="form-select">
+                        @for (docType of docTypes; track $index) {
+                        <option [value]="docType.value">{{ docType.key }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label>Data do Documento</label>
+                    <input bsDatepicker class="form-control cursor-pointer" formControlName="docDate"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Data de vencimento</label>
+                    <input bsDatepicker class="form-control cursor-pointer" formControlName="docDueDate"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Data de tributação</label>
+                    <input bsDatepicker class="form-control cursor-pointer" formControlName="taxDate"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }" />
+                </div>
+
+                <div class="form-group">
+                    <label>Data Necessária</label>
+                    <input bsDatepicker class="form-control cursor-pointer" formControlName="reqDate"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    <label asp-for="Comments" class="control-label">Comentários</label>
+                    <textarea asp-for="Comments" class="form-control" rows="4" maxlength="253"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group position-relative">
+                    <label asp-for="Header" class="control-label">Obs. de Abertura</label>
+                    <textarea asp-for="Header" class="form-control" rows="4" maxlength="253"></textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group position-relative">
+                    <label asp-for="Footer" class="control-label">Obs. de Encerrmento</label>
+                    <textarea asp-for="Footer" class="form-control" rows="4" maxlength="253"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botão para adicionar novo item -->
+        <div class="d-flex justify-content-end mb-3">
+            @if(isItem()){
+            <div (click)="openItemsModal()" type="button" style="white-space: nowrap" class="btn btn-primary"
+                id="btnAddItem"><i class="fa fa-plus"></i> Item</div>
+            } @else {
+            <div (click)="addDocumentLine()" type="button" style="white-space: nowrap" class="btn btn-primary"
+                id="btnAddItem"><i class="fa fa-plus"></i> Serviço</div>
+            }
+        </div>
+
+
+        <!-- Grid para Itens Adicionados -->
+
+        @if(documentLines.length > 0){
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th *ngIf="isItem()" style="white-space: nowrap">Código do Item</th>
+                            <th width="25%">Descrição</th>
+                            <th width="15%">Fornecedor</th>
+                            <th width="15%">Centro Custo</th>
+                            <th width="15%">Projeto</th>
+                            <th width="10%" style="white-space: nowrap">Data Necessária</th>
+                            <th *ngIf="isItem()" width="10%">Qtd.</th>
+                            <th style="white-space: nowrap" width="10%">Preço</th>
+                            <th width="1%"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemList">
+                        @for(line of documentLines; track $index){
+                        <tr>
+                            <td *ngIf="isItem()">
+                                <div class="mt-1">
+                                    {{ line.itemCode }}
+                                </div>
+                                <input type="hidden" />
+                                <!--itemCode-->
+                            </td>
+                            <td>
+                                <!--itemName-->
+                                <input type="text" class="form-control pe-5" [value]="line.itemName" [readOnly]="isItem()" />
+                            </td>
+                            <td>
+                                <!-- <div class="position-relative">
+                    
+                                    <input type="hidden" />
+                     
+                                    <input type="text" readonly class="form-control pe-5"/>
+
+                                    <span v-on:click="openModalBP(i)" class="position-absolute end-0 top-0 mt-2 me-2"
+                                        title="Buscar Fornecedor" style="cursor: pointer;">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </span>
+                                </div> -->
+
+                                <select class="form-select"></select>
+                            </td>
+                            <td>
+                                <!-- <div class="position-relative">
+                         
+                                    <input type="hidden" :name="'DocumentLines[' + i + '].OcrCode'"
+                                        :id="'DocumentLines_' + i + '_OcrCode'" :value="item.prcCode" />
+                       
+                                    <input type="text" readonly class="form-control pe-5"
+                                        :value="item.ocrDescription" />
+                                    <span v-on:click="openModalCentroCusto(i)"
+                                        class="position-absolute end-0 top-0 mt-2 me-2" title="Buscar Centro de Custo"
+                                        style="cursor: pointer;">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </span>
+                                </div> -->
+                                <select class="form-select">
+                                    @for (costCenter of costCenters; track $index) {
+                                        <option [value]="costCenter.prcCode">{{ costCenter.prcName }}</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <!-- <div class="position-relative">
+                
+                                    <input type="hidden" :name="'DocumentLines[' + i + '].PrjCode'"
+                                        :id="'DocumentLines_' + i + '_PrjCode'" :value="item.prjCode" />
+             
+                                    <input type="text" readonly class="form-control pe-5"
+                                        :value="item.prjDescription" />
+                                    <span v-on:click="openModalProjetos(i)"
+                                        class="position-absolute end-0 top-0 mt-2 me-2" title="Buscar Projeto"
+                                        style="cursor: pointer;">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </span>
+                                </div> -->
+                                <select class="form-select"></select>
+                            </td>
+                            <td>
+                                <!-- <input type="date"
+                                                   class="form-control"
+                                                   :name="'DocumentLines[' + i + '].ReqDate'"
+                                                   :id="'DocumentLines_' + i + '_ReqDate'"
+                                                   :value="'@Model.ReqDate.ToString("yyyy-MM-dd")'" /> -->
+
+                                <input bsDatepicker class="form-control cursor-pointer" 
+                                    [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }" />
+                            </td>
+                            <td *ngIf="isItem()">
+                                <input type="number" min="1" value="1" class="form-control"
+                                    :name="'DocumentLines[' + i + '].Quantity'"
+                                    :id="'DocumentLines_' + i + '_Quantity'" />
+                            </td>
+                            <td>
+                                <input type="text" :value="0" class="price form-control"/>
+                            </td>
+                            <td>
+                                <i (click)="removeDocumentLine($index)" :title="'Excluir item #' + item.itemCode"
+                                    style="color: red; margin-right: 5px; margin-top: 10px; cursor: pointer"
+                                    class="fa-regular fa-trash-can"></i>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        } @else {
+        <div class="p-4 border rounded shadow-sm mb-3"></div>
+        }
+
+        <div class="p-2 d-flex justify-content-end">
+            <button type="submit" class="btn btn-success">Salvar</button>
+            <a routerLink="/documents/purchaseRequests" asp-action="Index" class="btn btn-danger ms-2">Cancelar</a>
+        </div>
+    </form>
+</div>

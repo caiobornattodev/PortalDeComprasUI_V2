@@ -71,14 +71,19 @@ export class DocumentsComponent implements OnInit {
     });
   }
 
-  searchBar(event: any) {
+  search(event: any) {
     let searchValue = String(event.target.value).trim();
 
-    this.documentsFiltered = this.documents;
+
+    if(searchValue == ''){
+      this.documentsFiltered = this.documents;
+      return;
+    } 
+
 
     this.documentsFiltered = this.documentsFiltered
       .filter(request => request.docNum.includes(searchValue) ||
-        request.comments.includes(searchValue) ||
+        request.comments.toLowerCase().includes(searchValue.toLowerCase()) ||
         request.docTotal.toString().includes(searchValue));
   }
 

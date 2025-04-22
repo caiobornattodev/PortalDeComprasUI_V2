@@ -10,8 +10,6 @@ import { DocumentDetailsComponent } from './components/document/document-details
 import { CreatePurchaseRequestComponent } from './components/document/create-purchase-request/create-purchase-request.component';
 import { CreatePurchaseOrderComponent } from './components/document/create-purchase-order/create-purchase-order.component';
 
-
-
 export const routes: Routes = [
     {path : '' , component : HomeComponent, canActivate : [authGuard]},
     {path : 'login', component: LoginComponent, canActivate: [alereadyLogedGuard]},

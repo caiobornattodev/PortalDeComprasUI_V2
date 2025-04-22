@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, output } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Requester } from '../../../models/requester';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -9,15 +9,36 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   templateUrl: './requesters-modal.component.html',
   styleUrl: './requesters-modal.component.css'
 })
-export class RequestersModalComponent  {
+export class RequestersModalComponent implements OnInit {
 
 
   bsModalRef = inject(BsModalRef);
-  requesters : Requester[] = [];
+  requesters: Requester[] = [];
+  filteredRequesters: Requester[] = [];
   selectedRequester: Requester | null = null;
 
-  onSelectRequester(requester: Requester){
+  ngOnInit() {
+    this.filteredRequesters = this.requesters;
+  }
+
+  onSelectRequester(requester: Requester) {
     this.selectedRequester = requester;
     this.bsModalRef.hide();
   }
+
+  search(event: any) {
+    let searchValue = String(event.target.value).trim();
+
+    if (searchValue == '') {
+      this.filteredRequesters = this.requesters;
+      return;
+    }
+
+    this.filteredRequesters = this.filteredRequesters.filter(requester =>
+      requester.empId.includes(searchValue) ||
+      requester.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
+      requester.lastName.toLowerCase().includes(searchValue.toLowerCase())
+    );
+  }
 }
+

@@ -9,7 +9,7 @@
                 <div class="form-group">
                     <label>Pesquisar</label>
                     <input type="text" formControlName="globalFilter" class="form-control"
-                        placeholder="Buscar por Documento, Comentários ou Total" (keyup)="searchBar($event)">
+                        placeholder="Buscar por Documento, Comentários ou Total" (keyup)="search($event)">
                 </div>
             </div>
             <!-- Checkboxes de Status -->
@@ -58,9 +58,12 @@
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
 
-                    <button type="button" class="btn btn-success">
+                    <a 
+                        routerLink="/document/{{ documentType == 'purchaseRequests' ? 'createPurchaseRequest' : 'createPurchaseOrder' }}" 
+                        type="button" class="btn btn-success"
+                    >
                         <i class="fa fa-plus"></i>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

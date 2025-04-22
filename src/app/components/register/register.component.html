@@ -104,7 +104,7 @@
 
             <div class="form-group mb-3">
                 <label class="form-label">Empresa</label>
-                <select formControlName="companyId" class="form-control">
+                <select formControlName="companyId" class="form-select">
                     @for (company of companies; track $index) {
                     <option [value]="company.companyId">{{ company.companyName }}</option>
                     }

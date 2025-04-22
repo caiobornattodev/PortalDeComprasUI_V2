@@ -1,0 +1,35 @@
+<div class="p-4 border rounded shadow-sm">
+    <div class="content-modal">
+        <div class="mb-3 form-group">
+            <label class="control-label">Procurar:</label>
+            <input (keyup)="search($event)" class="form-control" />
+        </div>
+        @if(filteredItems.length > 0){
+        <div class="scroll-table-modal p-2">
+            <table class="table-bp table table-bordered table-sm-custom table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center" width="1%"><input type="checkbox"/></th>
+                        <th width="5%" ><span style="white-space: no-wrap;">Código do Item</span></th>
+                        <th width="35%">Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of filteredItems; track $index) {
+                    <tr>
+                        <td class="text-center"><input (change)="selectDiselectItems($event,item)" type="checkbox"/></td>
+                        <td>{{ item.itemCode }}</td>
+                        <td>{{ item.itemName }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+    </div>
+    <hr>
+    <div class="d-flex justify-content-end mt-2">
+        <div (click)="addSlectedItems()" class="btn btn-primary me-2">Adicionar</div>
+        <div (click)="modalService.hide()" class="btn btn-danger me-2">Cancelar</div>
+    </div>
+</div>

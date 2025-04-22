@@ -2,7 +2,7 @@
     <div class="content-modal">
         <div class="mb-3 form-group">
             <label class="control-label">Procurar:</label>
-            <input v-model="search" class="form-control" />
+            <input (keyup)="search($event)" class="form-control" />
         </div>
         @if(requesters.length > 0){
             <div class="scroll-table-modal p-2">
@@ -15,7 +15,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (requester of requesters; track $index) {
+                        @for (requester of filteredRequesters; track $index) {
                             <tr (dblclick)="onSelectRequester(requester)" style="cursor : pointer" title="*Clique duas vezes para selecionar o Colaborador">
                                 <td >{{ requester.empId }}</td>
                                 <td>{{ requester.firstName }}</td>
@@ -37,14 +37,3 @@
         <div (click)="bsModalRef.hide()" class="btn btn-danger">Cancelar</div>
     </div>
 </div>
-
-<!-- v-on:dblclick="selectRequester(colaborador.empId,colaborador.firstName)" -->
-
-<!-- <div id="modalRequesterColaborador" style="display : none" class="p-5">
-    <div class="modal-container p-4 border rounded shadow-sm">
-
-        <div class="modal-foot">
-            <div v-on:click="closeModalRequesterUser()" style="margin-left : 100px;" class="btn btn-danger">Cancelar</div>
-        </div>
-    </div>
-</div> -->

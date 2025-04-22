@@ -9,7 +9,7 @@ export interface DocumentLine {
     itemName: string | null;
     quantity: number;
     price: number;
-    reqDate: string;
+    reqDate: Date;
     lineTotal: number;
     targetType: BoObjectTypes;
     batchNumbers: BatchNumber[] | null;

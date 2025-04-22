@@ -11,7 +11,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (accountService.currentUser()) {
     return true;
   } else {
-    toastrService.error('Você deve estar logado para acessar essa pagina!')
     router.navigateByUrl('/login');
     return false;
   }

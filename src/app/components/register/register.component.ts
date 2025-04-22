@@ -26,20 +26,21 @@ export class RegisterComponent implements OnInit {
   modalService = inject(BsModalService)
   portalService = inject(PortalService);
 
-  registerForm: FormGroup = new FormGroup({});
   typeOptions = [
     { key: 'Comprador', value: 0 },
     { key: 'Aprovador', value: 1 },
     { key: 'Ambos', value: 2 },
   ];
-  requesters: Requester[] = [];
-  bsModalRef: BsModalRef<RequestersModalComponent> = new BsModalRef<RequestersModalComponent>();
-
+  
   //Vai ficar com dados fixos por enquanto
   companies = [
     { companyId: 1, companyName: 'Acme Inc.' },
     { companyId: 2, companyName: 'Luthor Corp' }
   ]
+  
+  registerForm: FormGroup = new FormGroup({});
+  requesters: Requester[] = [];
+  requestersModal: BsModalRef<RequestersModalComponent> = new BsModalRef<RequestersModalComponent>();
 
   showPassword = false;
   showConfirmPassword = false;
@@ -88,10 +89,10 @@ export class RegisterComponent implements OnInit {
         selectedRequester: null
       }
     }
-    this.bsModalRef = this.modalService.show(RequestersModalComponent, initialState);
+    this.requestersModal = this.modalService.show(RequestersModalComponent, initialState);
 
-    this.bsModalRef.onHide?.subscribe({
-      next: () => this.setSelectedRequester(this.bsModalRef)
+    this.requestersModal.onHide?.subscribe({
+      next: () => this.setSelectedRequester(this.requestersModal)
     })
   }
 
